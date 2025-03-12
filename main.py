@@ -5,18 +5,15 @@ from dotenv import load_dotenv
 import requests
 
 
-def raise_for_status(response):
-    error = response.json().get("error")
-    if error:
-        raise requests.exceptions.HTTPError(error)
-
-
 def shorten_link(token, user_input):
     payload = {"access_token": token, "v": 5.199, "url": user_input}
     response = requests.get(
         "https://api.vk.ru/method/utils.getShortLink", params=payload
     )
-    raise_for_status(response)
+    response.raise_for_status()
+    error_msg = response.json().get("error")
+    if error_msg:
+        raise requests.exceptions.HTTPError(error_msg)
     short_link = response.json()["response"]["short_url"]
     return short_link
 
@@ -32,7 +29,10 @@ def count_clicks(token, short_link):
     response = requests.get(
         "https://api.vk.ru/method/utils.getLinkStats", params=payload
     )
-    raise_for_status(response)
+    response.raise_for_status()
+    error_msg = response.json().get("error")
+    if error_msg:
+        raise requests.exceptions.HTTPError(error_msg)
     clicks_count = response.json()["response"]["stats"][0].get("views")
     return clicks_count
 
@@ -48,16 +48,16 @@ def is_shorten_link(token, user_input):
     response = requests.get(
         "https://api.vk.ru/method/utils.getLinkStats", params=payload
     )
+    response.raise_for_status()
     return "error" not in response.json()
 
 
 def main():
     load_dotenv()
-    token = os.getenv("TOKEN")
+    token = os.environ["VK_TOKEN"]
     user_input = input()
 
     try:
-        requests.get(user_input)
         if is_shorten_link(token, user_input):
             clicks_count = count_clicks(token, short_link=user_input)
             print("Количество переходов: ", clicks_count)
@@ -66,8 +66,6 @@ def main():
             print("Сокращенная ссылка: ", short_link)
     except requests.exceptions.HTTPError as error:
         print(f"ошибка api {error}")
-    except requests.exceptions.ConnectionError:
-        exit(f"Нет такой ссылки {user_input}")
 
 
 if __name__ == "__main__":
