@@ -11,27 +11,37 @@
 Количество переходов:  106
 ```
 
-### Как установить
+## Окружение
 Рекомендуется использовать [virtualenv/venv](https://docs.python.org/3.13/library/venv.html) для изоляции проекта.
-Настройка виртуальное окружение и подключение к нему:
-`venv\Scripts\activate` - для Windows
+
+### Настройка виртуальное окружение
+* Для Windows:
 ```bash
 python -m venv C:\path_to_new_virtual_environment
 venv\Scripts\activate
 ```
+
+## Зависимости
 Python3 должен быть уже установлен. Используйте `pip` или `pip3` для установки зависимостей:
 ```bash
 pip install -r requirements.txt
 ```
-Получите [ключ доступа](https://dev.vk.com/ru/api/access-token/getting-started) для работы с VK API. Ключ необходимо добавить в `.env`, предварительно создав его в корне проекта:
+
+## Переменные окружения
+### Как получить
+Получите [ключ доступа](https://dev.vk.com/ru/api/access-token/getting-started) для работы с VK API. 
+
+Ключ необходимо добавить в `.env`, предварительно создав его в корне проекта:
 ```
 VK_TOKEN='ваш_токен'
 ```
+
+## Запуск
 Запустите программу, передав ссылку как аргумент:
 ```bash
 python main.py https://dvmn.org/modules/
 ```
 
-### Цель проекта
+## Примечание
 
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [dvmn.org](https://dvmn.org/).
